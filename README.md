@@ -46,4 +46,4 @@ Durante mi camino de aprendizaje, he ido validando mis conocimientos técnicos c
 
 Si quieres charlar sobre cloud, estudios o proyectos:
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin)](www.linkedin.com/in/patrick-adonis-hurtado-contreras)
+Linkedin: www.linkedin.com/in/patrick-adonis-hurtado-contreras
