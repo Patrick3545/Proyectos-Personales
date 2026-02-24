@@ -1,40 +1,49 @@
-### Hola, soy [Tu Nombre] 👋
+### Hola, soy Patrick Hurtado 👋
 
-Soy un **Cloud Security Engineer & Solutions Architect** con base en Madrid, España 🇪🇸.
+Actualmente soy estudiante de un máster de **Ingeniería Multicloud** en Madrid, España 🇪🇸.
 
-Me apasiona el ecosistema de **Microsoft Azure**, enfocándome en diseñar infraestructuras que no solo sean escalables y eficientes, sino seguras desde el diseño (Security by Design). Mi objetivo es unir el mundo de la arquitectura cloud con las mejores prácticas de ciberseguridad.
+Me apasiona todo el ecosistema cloud y he creado este repositorio con un fin muy claro: **aprender haciendo**.
 
----
-
-### 🚀 ¿En qué estoy trabajando?
-
-Actualmente estoy profundizando en metodologías **DevSecOps** y arquitecturas modernas.
-🔭 **Proyecto destacado:** Estoy construyendo una **Arquitectura Híbrida Zero-Trust con gestión GitOps**, implementando controles de seguridad avanzados y automatización de infraestructura.
+Aquí iré publicando las diferentes pruebas, laboratorios y "trasteos" que vaya realizando para descubrir cómo funcionan realmente los servicios que nubes como Azure o AWS nos ofrecen. Mi objetivo es crear entornos desde cero, romperlos y volverlos a levantar para entender la tecnología desde dentro.
 
 ---
 
-### 🛠️ Tech Stack & Herramientas
+### 🔭 ¿En qué estoy trabajando ahora?
 
-* **Cloud:** Microsoft Azure (Core Infrastructure, Networking, Identity).
-* **Seguridad:** Microsoft Sentinel, Defender for Cloud, Microsoft Entra ID (IAM), Azure Key Vault.
-* **IaC & Automatización:** Terraform, Bicep, ARM Templates, GitHub Actions.
-* **Contenedores & Orquestación:** Docker, Kubernetes (AKS).
-* **OS:** Linux & Windows Server.
+Actualmente estoy metido en mi primer proyecto para poner en práctica lo aprendido en el máster:
+
+🚧 **Integración de un servidor local (VMware) con Azure Arc para gestión híbrida, automatizando su configuración base con Ansible y el despliegue de aplicaciones en Kubernetes mediante GitOps.**
+Basciamente la idea seria coger una maquina y simular un entorno hibrido en el automatizar la instalacion de algunas cosas con ansible, administrar un cluster de kubernetes con azure arc y luego hacer alguna alerta de acceso con sentinel para poder probar esto mejor.
 
 ---
 
-### 🏆 Certificaciones Recientes
+### 🚀 Roadmap de Aprendizaje
 
-He estado validando mis conocimientos técnicos con las certificaciones oficiales de Microsoft:
+Aunque ya tengo una base sólida en administración de cloud, tengo muchas ganas de profundizar en la automatización y la Infraestructura como Código (IaC).
 
-* **AZ-305:** Microsoft Certified: Azure Solutions Architect Expert (Designing Infrastructure Solutions) 🏗️
-* **AZ-500:** Microsoft Certified: Azure Security Engineer Associate 🛡️
-* *(Añade aquí otras si tienes, como AZ-104 o AZ-900)*
+Mis próximos objetivos técnicos son:
+* **Terraform:** Para desplegar infraestructura de forma agnóstica.
+* **Ansible:** Para la gestión de configuraciones.
+* **AWS:** Estoy empezando a explorar el mundo de Amazon Web Services para complementar mis conocimientos de Azure.
+
+---
+
+### 🏆 Certificaciones
+
+Durante mi camino de aprendizaje, he ido validando mis conocimientos técnicos con las siguientes certificaciones oficiales:
+
+* **Microsoft Azure:**
+    * ✅ **AZ-305:** Solutions Architect Expert
+    * ✅ **AZ-500:** Security Engineer Associate
+    * ✅ **AZ-104:** Administrator Associate
+
+* **Amazon Web Services (AWS):**
+    * ⏳ **En preparación:** Solutions Architect – Associate (SAA-C03)
 
 ---
 
 ### 📫 Contacto
 
-Si te interesa charlar sobre Cloud Security, Arquitectura o simplemente compartir experiencias sobre certificaciones:
+Si quieres charlar sobre cloud, estudios o proyectos:
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin)](TU_URL_DE_LINKEDIN_AQUI)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin)](www.linkedin.com/in/patrick-adonis-hurtado-contreras)
