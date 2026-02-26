@@ -203,6 +203,139 @@ Veremos que empezará la instalación de los agentes. Una vez termine, veremos q
 
 <img width="886" height="83" alt="image" src="https://github.com/user-attachments/assets/2f1fed2f-eadf-4ca3-b876-6545bf0e552c" />
 
+### Prueba de GitOps
+
+Una vez agregado, iremos con la prueba que buscamos hacer. Para ello haré uso de un repositorio que he creado con una página sencilla y una configuración normalita para poder probar esto. El código es lo de menos; lo que buscamos es conectarla y que se sincronice correctamente.
+
+1. El código de la página se ve así:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mi-web-html
+  namespace: default
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8"> <title>GitOps Demo</title>
+      <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; background-color: #f0f4f8; }
+        h1 { color: #0078d4; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: inline-block; }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <h1>¡Funciona!</h1>
+        <p>Esta web está desplegada en mi Cluster local con Azure Arc.</p>
+        <p>Gestionada vía GitOps.</p>
+        <hr>
+        <p><small>Esperamos el cambio en función de lo que pusimos y ala.</small></p>
+      </div>
+    </body>
+    </html>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi-web-deployment
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mi-web
+  template:
+    metadata:
+      labels:
+        app: mi-web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html-volume
+        configMap:
+          name: mi-web-html
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mi-web-service
+  namespace: default
+spec:
+  type: LoadBalancer  # ¡Esto es lo que busca MetalLB!
+  selector:
+    app: mi-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+```
+
+- Como se puede ver, el código es simple, aunque la parte importante es la del `spec`, en la que le decimos al clúster qué tipo de servicio queremos. Si no fuera `LoadBalancer` (hay otros como `NodePort` o `ClusterIP`), MetalLB no lo detectaría y no nos daría una IP.
+
+Una vez agregado esto, lo que haremos será irnos al clúster y decirle que este es el repositorio que queremos que mire.
+
+3. Dentro de nuestro clúster de Kubernetes que aparece en Azure Arc, buscaremos el apartado de **Settings** e iremos a la opción de **GitOps**.
+
+<img width="294" height="493" alt="image" src="https://github.com/user-attachments/assets/295d2105-59b9-4b82-b475-8bd624a26192" />
+
+4. Deberemos crear uno en el que pondremos lo siguiente en el primer apartado. Importante poner `cluster` en el scope para evitar algún problema de permisos (es un entorno de laboratorio).
+
+<img width="613" height="564" alt="image" src="https://github.com/user-attachments/assets/f8b62c98-11cf-43c2-9dbf-60e7accff694" />
+
+5. En el segundo apartado le diremos que es un repositorio Git. Especificamos el link, si el repositorio es público o no y cada cuánto queremos que se actualice. Pondré `1m` para pruebas.
+
+<img width="668" height="492" alt="image" src="https://github.com/user-attachments/assets/88b98ad7-9b51-4d0b-b59b-489418a62617" />
+
+6. El último apartado es donde le tenemos que decir qué archivo/ruta queremos que vea. Si lo ponemos mal, no podrá ver nuestro `.yaml`.
+
+<img width="883" height="488" alt="image" src="https://github.com/user-attachments/assets/0b66a985-03ee-4e5b-b26e-3f777d900dc6" />
+
+7. Creación del kustomization: el nombre es lo de menos, solo asegúrate de poner la ruta del archivo que quieras usar.
+
+<img width="484" height="622" alt="image" src="https://github.com/user-attachments/assets/252ab0dd-f46c-49dd-b155-3bf439a51fc4" />
+
+Y ya por último sería ver si la app se levanta. Si ejecutamos este comando en la VM, podremos ver lo que se ha ido desplegando:
+
+```bash
+kubectl get svc -n default
+```
+
+<img width="886" height="103" alt="image" src="https://github.com/user-attachments/assets/0fcdf3e9-8beb-425d-ada1-1100aeef9760" />
+
+Como vemos, ya tiene IP y si nos vamos al GitOps nos debería aparecer que todo está correcto:
+
+<img width="886" height="121" alt="image" src="https://github.com/user-attachments/assets/7dc03d69-99ba-48a8-91a5-9d2cfe05bcaf" />
+
+Y si vamos a la IP que tiene el LB, deberemos ver la página:
+
+<img width="886" height="325" alt="image" src="https://github.com/user-attachments/assets/b8ccf8d6-6a98-4c8d-846c-7cd9db339233" />
+
+Ahora comprobaremos entrando en el código de nuestro repositorio y cambiando el texto que he dejado para editar, daremos commit y esperaremos a que haga el cambio.
+
+<img width="886" height="474" alt="image" src="https://github.com/user-attachments/assets/be5dfb76-c65b-42fd-8d6c-411dc68cdb75" />
+<img width="484" height="102" alt="image" src="https://github.com/user-attachments/assets/84aa396a-4adf-4eff-8662-2445d5957957" />
+
+Esto se puede ver a través de los logs que nos da el kustomization cada vez que se sincroniza:
+
+<img width="522" height="359" alt="image" src="https://github.com/user-attachments/assets/78f30e5d-f213-4c06-ac8a-af4a0b1a47da" />
+
+Y vemos los cambios aplicados:
+
+<img width="603" height="330" alt="image" src="https://github.com/user-attachments/assets/a038ca83-6fbf-41ed-be51-ce2d6bcdfaf8" />
+
+---
+
 ---
 
 ## Fase 4: Seguridad Zero-Trust (Sentinel)
