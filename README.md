@@ -1,7 +1,8 @@
-Hola, soy Patrick Hurtado 👋  
-Actualmente soy estudiante de un máster de Ingeniería Multicloud en Madrid, España 🇪🇸.
+### Hola, soy Patrick Hurtado 👋
 
-Me apasiona todo el ecosistema cloud y he creado este repositorio con un fin muy claro: aprender haciendo.
+Actualmente soy estudiante de un máster de **Ingeniería Multicloud** en Madrid, España 🇪🇸.
+
+Me apasiona todo el ecosistema cloud y he creado este repositorio con un fin muy claro: **aprender haciendo**.
 
 Aquí iré publicando las diferentes pruebas, laboratorios y "trasteos" que vaya realizando para descubrir cómo funcionan realmente los servicios que nubes como Azure o AWS nos ofrecen. Mi objetivo es crear entornos desde cero, romperlos y volverlos a levantar para entender la tecnología desde dentro.
 
