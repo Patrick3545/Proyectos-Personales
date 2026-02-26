@@ -21,49 +21,72 @@ El despliegue lo puedes hacer de dos maneras:
 ### 1. Instalación y Configuración
 
 * **Instalación de ansible en Ubuntu:**
+```
+sudo apt update && sudo apt install ansible
+```
+  <img width="695" height="58" alt="image" src="https://github.com/user-attachments/assets/4a52a4ca-c37d-439c-b2bb-83cbdf82a697" />
+ 
+* **Creación del archivo de inventario:** Creación del archivo de servidores que tendrá ansible. 
+
+  <img width="502" height="75" alt="image" src="https://github.com/user-attachments/assets/f6ac5ac9-42d1-4dee-8db4-e92a61fff861" />
+
+* El contenido del archivo en el que tendremos los servidores, simplemente pondremos la ip de nuestro servidor y le diremos que el usuario que tenga que usar ansible sea el de nuestro Linux.
+
+  <img width="600" height="114" alt="image" src="https://github.com/user-attachments/assets/319c5a85-3cb9-408f-95c5-ba43ab651d34" />
 
 
-*(Inserta aquí la imagen de instalación o el comando de `apt install ansible`)* 
+* **Creación del Playbook:** Crearemos un archivo `.yaml` que será en el que luego pondremos las ordenes que queremos darle, es decir, que instale, que servicio inicia, modifica, para… 
 
-
-* 
-**Creación del archivo de inventario:** Creación del archivo de servidores que tendrá ansible. El contenido del archivo en el que tendremos los servidores, simplemente pondremos la ip de nuestro servidor y le diremos que el usuario que tenga que usar ansible sea el de nuestro Linux.
-
-
-* 
-**Creación del Playbook:** Crearemos un archivo `.yaml` que será en el que luego pondremos las ordenes que queremos darle, es decir, que instale, que servicio inicia, modifica, para… 
-
+<img width="686" height="55" alt="image" src="https://github.com/user-attachments/assets/d7888d76-8c69-4387-99f9-df6c48bb0bd4" />
 
 
 ### 2. Análisis del Playbook
 
+* **Playbook entero**:
+```yaml
+---
+- name: Configuración Base
+  hosts: servidores
+  become: true
+  tasks:
+    - name: Herramientas basicas que considero utiles para entornos de pruebas
+      apt:
+        name: [curl, git, htop, fail2ban]
+        state: present
+        update_cache: yes
+
+    - name: Instalar K3s (Kubernetes para luego intregar en azure)
+      shell: curl -sfL https://get.k3s.io | sh -
+      args:
+        creates: /usr/local/bin/k3s
+
+    # IMPORTANTE: Paramos Fail2Ban para permitir la demo de ataque luego
+    - name: Detener Fail2Ban temporalmente
+      service:
+        name: fail2ban
+        state: stopped
+        enabled: yes
+  ```
+
 En este caso, vamos parte por parte a analizar este archivo, es básico, pero a la hora de hacer un archivo de este estilo deberemos de comenzarlo con un `---`:
 
-* 
-**Hosts:** básicamente al hacer el otro archivo es el nombre que pusimos en paréntesis, por si tenemos una lista dividida en departamentos y solo queremos que se aplique en algunos.
+* **Hosts:** básicamente al hacer el otro archivo es el nombre que pusimos en paréntesis, por si tenemos una lista dividida en departamentos y solo queremos que se aplique en algunos.
 
 
 * **Estructura de tareas:** El resto del archivo se basará en:
-* 
-`name`: el que queramos, se puede usar para clasificar cada trozo y ver saber que hace.
+  
+* `name`: el que queramos, se puede usar para clasificar cada trozo y ver saber que hace.
 
 
-* 
-`apt`: definición del tipo de paquete que usaremos, yum, apt…. Usaremos `state: present` (Le dice a Ansible: "Asegúrate de que esto esté instalado"). Si ya está instalado, no hace nada. Si no, lo instala.
+* `apt`: definición del tipo de paquete que usaremos, yum, apt…. Usaremos `state: present` (Le dice a Ansible: "Asegúrate de que esto esté instalado"). Si ya está instalado, no hace nada. Si no, lo instala.
 
 
-* 
-`updated_cache`: lo único que hace es actualizar paquetes (apt update basicamente) por si no lo tuviera o el enlace que tuviera fuera muy antiguo ya que el servidor es nuevo.
+* `updated_cache`: lo único que hace es actualizar paquetes (apt update basicamente) por si no lo tuviera o el enlace que tuviera fuera muy antiguo ya que el servidor es nuevo.
 
 
+* **Instalación de Kubernetes (K3s):** Lo siguiente seria kubernetes, en este caso usaremos Shell ya que así se instala de manera real. Usaremos el argumento `creates: /usr/local/bin/k3s`. Esto hace que, si por algún casual usaras el mismo archivo porque se te olvido agregar algo, puedas hacer que ansible compruebe si existe ese archivo y si es así, directamente salte esa parte de la instalación, evitando que quizá si reinstala se cargue algo. Según he visto hay maneras diferentes de hacer esto (condiciones como *when*, *stat* o scripts), pero creo que el `creates` esta bien para el uso que le estoy dando.
 
-
-* 
-**Instalación de Kubernetes (K3s):** Lo siguiente seria kubernetes, en este caso usaremos Shell ya que así se instala de manera real. Usaremos el argumento `creates: /usr/local/bin/k3s`. Esto hace que, si por algún casual usaras el mismo archivo porque se te olvido agregar algo, puedas hacer que ansible compruebe si existe ese archivo y si es así, directamente salte esa parte de la instalación, evitando que quizá si reinstala se cargue algo. Según he visto hay maneras diferentes de hacer esto (condiciones como *when*, *stat* o scripts), pero creo que el `creates` esta bien para el uso que le estoy dando.
-
-
-* 
-**Gestión de Servicios:** El último apartado está pensado como dice el nombre para que paremos el servicio de fail2ban, cuando queramos parar o reinciar algo, simplemente usamos `service` acompañado del nombre del servicio y `state` para decir si lo queremos parado o habilitado.
+* **Gestión de Servicios:** El último apartado está pensado como dice el nombre para que paremos el servicio de fail2ban, cuando queramos parar o reinciar algo, simplemente usamos `service` acompañado del nombre del servicio y `state` para decir si lo queremos parado o habilitado.
 
 
 
