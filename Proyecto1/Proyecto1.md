@@ -1,6 +1,6 @@
 # Despliegue de Servidor Híbrido con Azure Arc y Kubernetes
 
-Lo primero que tendremos que hacer antes de empezar con esto sería plantear un esquema para que nos quede más claro todo esto. En mi caso no es algo muy complejo, pero no viene mal para que quede más claro todo. Ya con esto y sabiendo la máquina y cosas de Azure que usaremos, podremos seguir adelante.
+Lo primero que tendremos que hacer antes de empezar con esto sería plantear un esquema para que nos quede más claro todo esto. En mi caso no es algo muy complejo, pero no viene mal para que quede más claro todo. Ya con esto y sabiendo la máquina y cosas de Azure que usaremos, podremos seguir adelante. 
 
 <img width="885" height="547" alt="Diagrama Proyecto 1" src="https://github.com/user-attachments/assets/b14f3326-b0e6-4b3b-8b63-470c6b963294" />
 
