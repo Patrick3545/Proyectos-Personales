@@ -328,7 +328,7 @@ Ahora comprobaremos entrando en el código de nuestro repositorio y cambiando el
 
 Esto se puede ver a través de los logs que nos da el kustomization cada vez que se sincroniza:
 
-<img width="522" height="359" alt="image" src="https://github.com/user-attachments/assets/78f30e5d-f213-4c06-ac8a-af4a0b1a47da" />
+<img width="522" height="359" alt="image" src="https://github.com/user-attachments/assets/78f30e5d-f213-4f06-ac8a-af4a0b1a47da" />
 
 Y vemos los cambios aplicados:
 
