@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mi-web-html
+  namespace: default
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8"> <title>GitOps Demo</title>
+      <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; background-color: #f0f4f8; }
+        h1 { color: #0078d4; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: inline-block; }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <h1>¡Funciona!</h1>
+        <p>Esta web está desplegada en mi Cluster local con Azure Arc.</p>
+        <p>Gestionada vía GitOps.</p>
+        <hr>
+        <p><small>Esperamos el cambio en función de lo que pusimos y ala.</small></p>
+      </div>
+    </body>
+    </html>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi-web-deployment
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mi-web
+  template:
+    metadata:
+      labels:
+        app: mi-web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html-volume
+        configMap:
+          name: mi-web-html
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mi-web-service
+  namespace: default
+spec:
+  type: LoadBalancer  # ¡Esto es lo que busca MetalLB!
+  selector:
+    app: mi-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
