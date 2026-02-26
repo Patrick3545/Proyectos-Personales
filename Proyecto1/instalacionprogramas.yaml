@@ -1,0 +1,22 @@
+---
+- name: Configuración Base
+  hosts: servidores
+  become: true
+  tasks:
+    - name: Herramientas básicas que considero útiles para entornos de pruebas
+      apt:
+        name: [curl, git, htop, fail2ban]
+        state: present
+        update_cache: yes
+
+    - name: Instalar K3s (Kubernetes para luego integrar en Azure)
+      shell: curl -sfL https://get.k3s.io | sh -
+      args:
+        creates: /usr/local/bin/k3s
+
+    # IMPORTANTE: Paramos Fail2Ban para permitir la demo de ataque luego
+    - name: Detener Fail2Ban temporalmente
+      service:
+        name: fail2ban
+        state: stopped
+        enabled: yes
