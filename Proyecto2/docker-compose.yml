@@ -7,7 +7,7 @@ services:
       - DEBUG=1
       - LAMBDA_EXECUTOR=docker
       - DOCKER_HOST=unix:///var/run/docker.sock
-      - LOCALSTACK_AUTH_TOKEN="ls-beDaZobI-9396-WeTe-dIQi-HikEZAQebe3a"
+      - LOCALSTACK_AUTH_TOKEN= # "Poner ID AQUI"
       - SKIP_SSL_CERT_DOWNLOAD=1
     ports:
       - "4566:4566"

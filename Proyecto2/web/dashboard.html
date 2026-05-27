@@ -300,8 +300,6 @@
             pedidos.forEach(p => {
               let tr = document.createElement("tr");
               let statusClass = p.status ? p.status.toLowerCase() : 'en_cola';
-              
-              // Endpoint apuntando al nuevo bucket patrick-facturas
               let botonFactura = p.status === "PROCESADO" 
                 ? `<a href="http://localhost:4566/patrick-facturas/invoice_${p.order_id}.html" target="_blank" class="btn" style="padding: 0.2rem 0.6rem; font-size: 0.8rem; background-color: var(--success);">📥 Descargar Factura</a>`
                 : `<span style="color: var(--text-muted); font-size: 0.8rem; font-style: italic;">Generando...</span>`;

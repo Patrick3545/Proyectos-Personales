@@ -288,20 +288,20 @@ resource "aws_lambda_function" "reader" {
   }
 }
 
-# 1. API REST Gateway
+# API REST Gateway
 resource "aws_api_gateway_rest_api" "orders_api" {
   name        = "orders-api-dev"
   description = "API para procesamiento de pedidos (LocalStack demo)"
 }
 
-# 2. /orders resource
+# /orders resource
 resource "aws_api_gateway_resource" "orders_resource" {
   rest_api_id = aws_api_gateway_rest_api.orders_api.id
   parent_id   = aws_api_gateway_rest_api.orders_api.root_resource_id
   path_part   = "orders"
 }
 
-# 3. POST /orders (crear pedido)
+# POST /orders (crear pedido)
 resource "aws_api_gateway_method" "orders_post" {
   rest_api_id   = aws_api_gateway_rest_api.orders_api.id
   resource_id   = aws_api_gateway_resource.orders_resource.id
@@ -326,7 +326,7 @@ resource "aws_lambda_permission" "apigw_post" {
   source_arn    = "${aws_api_gateway_rest_api.orders_api.execution_arn}/*/*"
 }
 
-# 4. GET /orders (leer pedidos)
+# GET /orders (leer pedidos)
 resource "aws_api_gateway_method" "orders_get" {
   rest_api_id   = aws_api_gateway_rest_api.orders_api.id
   resource_id   = aws_api_gateway_resource.orders_resource.id
@@ -351,7 +351,7 @@ resource "aws_lambda_permission" "apigw_get" {
   source_arn    = "${aws_api_gateway_rest_api.orders_api.execution_arn}/*/*"
 }
 
-# 5. Despliegue de la API
+# Despliegue de la API
 resource "aws_api_gateway_deployment" "orders_api_deployment" {
   rest_api_id = aws_api_gateway_rest_api.orders_api.id
 
@@ -387,20 +387,20 @@ resource "aws_s3_bucket_website_configuration" "site_config" {
 
 #SISTEMA DE FACTURACIÓN
 
-# 1. Nuevo Bucket de S3 exclusivo para almacenar las facturas HTML
+# Nuevo Bucket de S3 exclusivo para almacenar las facturas HTML
 resource "aws_s3_bucket" "invoices_bucket" {
   bucket        = "patrick-facturas"
   force_destroy = true
 }
 
-# 2. Empaquetado en .zip de la nueva Lambda de facturas
+# Empaquetado en .zip de la nueva Lambda de facturas
 data "archive_file" "invoice_zip" {
   type        = "zip"
   source_file = "${path.module}/../lambdas/invoice.py"
   output_path = "${path.module}/../lambdas/invoice.zip"
 }
 
-# 3. Rol e IAM Policy para dar permiso a la Lambda a escribir en el Bucket
+# Rol e IAM Policy para dar permiso a la Lambda a escribir en el Bucket
 resource "aws_iam_role" "invoice_role" {
   name = "lambda-invoice-role-dev"
   assume_role_policy = jsonencode({
@@ -422,7 +422,7 @@ resource "aws_iam_role_policy_attachment" "invoice_attach" {
   policy_arn = aws_iam_policy.invoice_policy.arn
 }
 
-# 4. Creación de la Función Lambda
+# Creación de la Función Lambda
 resource "aws_lambda_function" "invoice_lambda" {
   function_name    = "invoice-lambda-dev"
   handler          = "invoice.handler"
@@ -432,14 +432,14 @@ resource "aws_lambda_function" "invoice_lambda" {
   source_code_hash = data.archive_file.invoice_zip.output_base64sha256
 }
 
-# 5. Suscripción: Conectar la Lambda al Topic SNS de pedidos procesados
+# Suscripción: Conectar la Lambda al Topic SNS de pedidos procesados
 resource "aws_sns_topic_subscription" "sns_to_lambda_invoice" {
   topic_arn = aws_sns_topic.order_processed_topic.arn
   protocol  = "lambda"
   endpoint  = aws_lambda_function.invoice_lambda.arn
 }
 
-# 6. Permiso para que SNS pueda "despertar" a la Lambda
+# Permiso para que SNS pueda "despertar" a la Lambda
 resource "aws_lambda_permission" "sns_allow_invoice" {
   statement_id  = "AllowSNSInvokeInvoice"
   action        = "lambda:InvokeFunction"

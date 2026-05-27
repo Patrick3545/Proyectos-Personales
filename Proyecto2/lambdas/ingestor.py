@@ -5,13 +5,10 @@ import boto3
 import re
 
 def get_localstack_endpoint():
-    # Usa la variable estándar de LocalStack para comunicación interna
     host = os.environ.get("LOCALSTACK_HOSTNAME", "localhost")
     return f"http://{host}:4566"
 
 def dns_to_plain_queue_url(queue_url):
-    # Quita el prefijo 'http://sqs....localstack.cloud:4566' y reemplaza por endpoint real
-    # Ej: 'http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/orders-queue-dev'
     new_endpoint = get_localstack_endpoint()
     return re.sub(r'http://sqs\.(.*?)\.localhost\.localstack\.cloud:4566', new_endpoint, queue_url)
 

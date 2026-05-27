@@ -31,7 +31,7 @@ sns = boto3.client(
 )
 
 # Variables de entorno pasadas por Terraform
-TABLE_NAME = os.environ.get("ORDERS_TABLE_NAME")  # ¡Asegúrate que en terraform el nombre es este!
+TABLE_NAME = os.environ.get("ORDERS_TABLE_NAME")
 SNS_TOPIC_ARN = os.environ.get("SNS_TOPIC_ARN")
 
 def handler(event, context):

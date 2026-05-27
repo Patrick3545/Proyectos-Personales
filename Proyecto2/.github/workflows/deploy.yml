@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted # Usamos un runner self-hosted que tenga acceso a Docker y LocalStack
+    runs-on: self-hosted # Uso un runner self-hosted que tenga acceso a Docker y LocalStack
 
     steps:
       - name: Descargar código del repositorio

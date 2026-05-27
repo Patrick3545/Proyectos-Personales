@@ -14,11 +14,8 @@ s3 = boto3.client(
 def handler(event, context):
     for record in event.get("Records", []):
         try:
-            # El mensaje de SNS viene serializado dentro del récord
             sns_message = json.loads(record["Sns"]["Message"])
             order_id = sns_message["order_id"]
-            
-            # Estructura visual de la factura maquetada en HTML con la marca PATRICKGEAR
             invoice_html = f"""<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -58,10 +55,9 @@ def handler(event, context):
   </div>
 </body>
 </html>"""
-            
-            # Guardar la factura en S3 forzando UTF-8 y descarga automática (attachment)
+          
             s3.put_object(
-                Bucket="patrick-facturas",  # El bucket correcto que definiremos en Terraform
+                Bucket="patrick-facturas", 
                 Key=f"invoice_{order_id}.html",
                 Body=invoice_html.encode('utf-8'), 
                 ContentType="text/html; charset=utf-8", 
