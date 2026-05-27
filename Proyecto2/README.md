@@ -2,10 +2,10 @@
 
 > **Ecosistema de comercio electrónico serverless de nivel empresarial.** > Una arquitectura guiada por eventos (Event-Driven) que emula servicios de AWS de forma 100% local, provisionada como Infraestructura como Código (IaC) y automatizada con integración continua inteligente.
 
-![AWS](https://img.shields.io/badge/AWS-LocalStack-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
-![Terraform](https://img.shields.io/badge/Terraform-IaC-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)
-![Python](https://img.shields.io/badge/Python-Lambdas-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI%2FCD-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
+[![AWS / LocalStack](https://img.shields.io/badge/AWS-LocalStack-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://localstack.cloud/)
+[![Terraform](https://img.shields.io/badge/Terraform-IaC-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)](https://www.terraform.io/)
+[![Python](https://img.shields.io/badge/Python-Lambdas-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI%2FCD-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/features/actions)
 
 ---
 
@@ -19,6 +19,8 @@
 ---
 
 ## Topología de la Arquitectura
+
+![alt text](<Diagrama Final.png>)
 
 El flujo de datos transaccional sigue este ciclo de vida:
 
