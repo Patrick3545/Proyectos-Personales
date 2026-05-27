@@ -1,0 +1,15 @@
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    environment:
+      - SERVICES=s3,sqs,sns,dynamodb,apigateway,lambda,iam 
+      - DEBUG=1
+      - LAMBDA_EXECUTOR=docker
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - LOCALSTACK_AUTH_TOKEN="ls-beDaZobI-9396-WeTe-dIQi-HikEZAQebe3a"
+      - SKIP_SSL_CERT_DOWNLOAD=1
+    ports:
+      - "4566:4566"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

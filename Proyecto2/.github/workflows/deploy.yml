@@ -1,0 +1,84 @@
+name: LocalStack Smart CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted # Usamos un runner self-hosted que tenga acceso a Docker y LocalStack
+
+    steps:
+      - name: Descargar código del repositorio
+        uses: actions/checkout@v4
+
+      # DETECTOR DE CAMBIOS SMART
+      - name: Detectar cambios en los archivos
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            infra:
+              - 'terraform/**'
+            lambdas:
+              - 'lambdas/**'
+            frontend:
+              - 'web/dashboard.html'
+
+      # ESCENARIO 1: CAMBIOS EN TERRAFORM
+      - name: Configurar Terraform
+        if: steps.filter.outputs.infra == 'true'
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Terraform Init & Apply
+        if: steps.filter.outputs.infra == 'true'
+        run: |
+          cd terraform
+          terraform init
+          terraform apply -auto-approve
+          # Regenera el txt con la URL dinámica actualizada
+          terraform output -raw orders_api_url_localstack > ../web/apiurl.txt
+
+      - name: Subir apiurl.txt a S3 (Solo si cambió la Infra)
+        if: steps.filter.outputs.infra == 'true'
+        run: |
+          export AWS_ACCESS_KEY_ID=test
+          export AWS_SECRET_ACCESS_KEY=test
+          export AWS_DEFAULT_REGION=us-east-1
+          aws s3 cp web/apiurl.txt s3://patrick-static-site/apiurl.txt --endpoint-url=http://localhost:4566
+
+      # ESCENARIO 2: CAMBIOS SOLO EN LAS LAMBDAS
+
+      - name: Actualizar Código de Lambdas modificadas
+        if: steps.filter.outputs.lambdas == 'true' && steps.filter.outputs.infra == 'false'
+        run: |
+          export AWS_ACCESS_KEY_ID=test
+          export AWS_SECRET_ACCESS_KEY=test
+          export AWS_DEFAULT_REGION=us-east-1
+          
+          cd lambdas
+          
+          # Actualiza el ingestor si cambió su código
+          zip -j ingestor.zip ingestor.py
+          aws lambda update-function-code --function-name ingestor-lambda-dev --zip-file fileb://ingestor.zip --endpoint-url=http://localhost:4566
+          
+          # Actualiza el worker si cambió su código
+          zip -j worker.zip worker.py
+          aws lambda update-function-code --function-name worker-lambda-dev --zip-file fileb://worker.zip --endpoint-url=http://localhost:4566
+          
+          # Actualiza el reader si cambió su código
+          zip -j reader.zip reader.py
+          aws lambda update-function-code --function-name reader-lambda-dev --zip-file fileb://reader.zip --endpoint-url=http://localhost:4566
+
+
+      # ESCENARIO 3: CAMBIOS EN EL HTML
+
+      - name: Desplegar Frontend a S3
+        if: steps.filter.outputs.frontend == 'true' || steps.filter.outputs.infra == 'true'
+        run: |
+          export AWS_ACCESS_KEY_ID=test
+          export AWS_SECRET_ACCESS_KEY=test
+          export AWS_DEFAULT_REGION=us-east-1
+          aws s3 cp web/dashboard.html s3://patrick-static-site/dashboard.html --endpoint-url=http://localhost:4566

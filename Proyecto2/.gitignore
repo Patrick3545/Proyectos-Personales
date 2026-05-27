@@ -1,0 +1,22 @@
+# --- TERRAFORM ---
+# Ignorar binarios de proveedores y estados locales
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
+# --- PYTHON ---
+# Ignorar cachés de ejecución de Python
+__pycache__/
+*.pyc
+
+# --- COMPILADOS / BINARIOS ---
+# Las Lambdas se comprimen en la pipeline, no las queremos en Git
+lambdas/*.zip
+
+# --- ARCHIVOS DINÁMICOS O GENERADOS ---
+# La URL de la API cambia en cada despliegue local
+web/apiurl.txt
+
+# .gitignore
+*Zone.Identifier
