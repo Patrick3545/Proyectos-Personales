@@ -17,13 +17,4 @@ venv/
 # Logs and system files
 *.log
 .DS_Store
-
-# AI Agents
-.agents/
-skills-lock.json
-
-# Documentos varios y scripts sueltos
-*.pdf
-*.txt
-
 fix_*.py
