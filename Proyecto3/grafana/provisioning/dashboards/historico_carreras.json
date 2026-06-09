@@ -1,0 +1,242 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": 2,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 10,
+      "title": "HIST\u00d3RICO DE CARRERA: $session ($driver)",
+      "type": "row"
+    },
+    {
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 11,
+      "title": "TABLA DE VUELTAS",
+      "type": "table",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"lap_history\")\n  |> filter(fn: (r) => r[\"session_uid\"] == \"${session}\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"lap_time\" or r[\"_field\"] == \"sector1_time\" or r[\"_field\"] == \"sector2_time\" or r[\"_field\"] == \"sector3_time\")\n  |> group(columns: [\"lap_num\", \"_field\"])\n  |> last()\n  |> pivot(rowKey:[\"lap_num\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ \"Vuelta\": int(v: r.lap_num), \"Tiempo de Vuelta\": r.lap_time, \"Sector 1\": r.sector1_time, \"Sector 2\": r.sector2_time, \"Sector 3\": r.sector3_time }))\n  |> keep(columns: [\"Vuelta\", \"Tiempo de Vuelta\", \"Sector 1\", \"Sector 2\", \"Sector 3\"])\n  |> sort(columns: [\"Vuelta\"])",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showHeader": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tiempo de Vuelta"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:m:ss.SSS"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Sector 1"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Sector 2"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Sector 3"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 12,
+      "title": "TIEMPO DE VUELTA VS VUELTA",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"lap_history\")\n  |> filter(fn: (r) => r[\"session_uid\"] == \"${session}\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"lap_time\")\n  |> group(columns: [\"_field\"])\n  |> aggregateWindow(every: 1s, fn: last, createEmpty: false)\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "showPoints": "always"
+          },
+          "unit": "time:m:ss.SSS"
+        }
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "id": 20,
+      "title": "DEGRADACI\u00d3N Y TEMPERATURAS",
+      "type": "row"
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "id": 21,
+      "title": "TEMPERATURA SUPERFICIE DE LAS GOMAS (\u00b0C)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"session_uid\"] == \"${session}\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /tyre_temp_surf_/)\n  |> group(columns: [\"_field\"])\n  |> aggregateWindow(every: 5s, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth"
+          },
+          "unit": "celsius"
+        }
+      }
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [
+    "f1",
+    "historico"
+  ],
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s"
+    ]
+  },
+  "timezone": "browser",
+  "title": "An\u00e1lisis Hist\u00f3rico Post-Carrera (F1 25)",
+  "templating": {
+    "list": [
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "InfluxDB_F1"
+        },
+        "definition": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> keep(columns: [\"_time\", \"session_uid\"])\n  |> group(columns: [\"session_uid\"])\n  |> last(column: \"_time\")\n  |> group()\n  |> sort(columns: [\"_time\"], desc: true)\n  |> map(fn: (r) => ({ _value: string(v: r._time) + \" - Carrera (\" + r.session_uid + \")\" }))",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Sesi\u00f3n",
+        "multi": false,
+        "name": "session",
+        "options": [],
+        "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> keep(columns: [\"_time\", \"session_uid\"])\n  |> group(columns: [\"session_uid\"])\n  |> last(column: \"_time\")\n  |> group()\n  |> sort(columns: [\"_time\"], desc: true)\n  |> map(fn: (r) => ({ _value: string(v: r._time) + \" - Carrera (\" + r.session_uid + \")\" }))",
+        "refresh": 1,
+        "sort": 0,
+        "type": "query",
+        "regex": "/(?<text>.*) - Carrera \\((?<value>.*)\\)/"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "InfluxDB_F1"
+        },
+        "definition": "import \"influxdata/influxdb/schema\"\nschema.tagValues(bucket: \"f1_telemetry_raw\", tag: \"driver_name\")\n  |> filter(fn: (r) => not (r._value =~ /^Piloto/))",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Piloto",
+        "multi": false,
+        "name": "driver",
+        "options": [],
+        "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(bucket: \"f1_telemetry_raw\", tag: \"driver_name\")\n  |> filter(fn: (r) => not (r._value =~ /^Piloto/))",
+        "refresh": 1,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "version": 1
+}

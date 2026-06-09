@@ -1,0 +1,239 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [
+    {
+      "id": "a8592a65-7e38-41e0-865e-49def6506df5",
+      "type": "rectangle",
+      "x": 100,
+      "y": 100,
+      "width": 250,
+      "height": 250,
+      "strokeColor": "#000000",
+      "backgroundColor": "#ffd43b",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "010c62b8-3a2d-41bd-ac52-f462b1743701",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "010c62b8-3a2d-41bd-ac52-f462b1743701",
+      "type": "text",
+      "x": 110,
+      "y": 215,
+      "width": 230,
+      "height": 20,
+      "strokeColor": "#000000",
+      "backgroundColor": "transparent",
+      "fillStyle": "hachure",
+      "strokeWidth": 1,
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "text": "Measurement: telemetry_fast\n\nTags:\n- session_uid\n- driver_name\n- car_idx\n- is_player\n\nFields:\n- speed\n- throttle\n- engine_rpm\n...",
+      "fontSize": 20,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "a8592a65-7e38-41e0-865e-49def6506df5"
+    },
+    {
+      "id": "ff267d4d-c404-4eca-8156-0982c0cfe9df",
+      "type": "rectangle",
+      "x": 450,
+      "y": 100,
+      "width": 250,
+      "height": 250,
+      "strokeColor": "#000000",
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "3156aa82-7b47-4ade-aaa2-9620a2f53eaa",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "3156aa82-7b47-4ade-aaa2-9620a2f53eaa",
+      "type": "text",
+      "x": 460,
+      "y": 215,
+      "width": 230,
+      "height": 20,
+      "strokeColor": "#000000",
+      "backgroundColor": "transparent",
+      "fillStyle": "hachure",
+      "strokeWidth": 1,
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "text": "Measurement: lap_history\n\nTags:\n- session_uid\n- driver_name\n- car_idx\n- lap_num\n\nFields:\n- lap_time\n- sector1_time\n- sector2_time\n...",
+      "fontSize": 20,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "ff267d4d-c404-4eca-8156-0982c0cfe9df"
+    },
+    {
+      "id": "fdd63a72-ccb8-4d62-ac8c-1cf38439b4b8",
+      "type": "rectangle",
+      "x": 250,
+      "y": 400,
+      "width": 300,
+      "height": 100,
+      "strokeColor": "#000000",
+      "backgroundColor": "#eebefa",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "57049fe5-af1d-412f-a220-9201bdf5fbeb",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "57049fe5-af1d-412f-a220-9201bdf5fbeb",
+      "type": "text",
+      "x": 260,
+      "y": 440,
+      "width": 280,
+      "height": 20,
+      "strokeColor": "#000000",
+      "backgroundColor": "transparent",
+      "fillStyle": "hachure",
+      "strokeWidth": 1,
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "text": "Bucket: f1_telemetry_raw\nOrg: red-bull-racing",
+      "fontSize": 20,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "fdd63a72-ccb8-4d62-ac8c-1cf38439b4b8"
+    },
+    {
+      "id": "95870882-35ca-42e5-bcd1-9759adad0a77",
+      "type": "arrow",
+      "x": 225,
+      "y": 350,
+      "width": 75,
+      "height": 50,
+      "strokeColor": "#000000",
+      "backgroundColor": "transparent",
+      "fillStyle": "hachure",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          75,
+          50
+        ]
+      ],
+      "endArrowhead": "arrow"
+    },
+    {
+      "id": "9b59c2df-1e79-441e-b6e8-38637a8f4cda",
+      "type": "text",
+      "x": 232.5,
+      "y": 365,
+      "width": 60,
+      "height": 20,
+      "strokeColor": "#000000",
+      "backgroundColor": "transparent",
+      "fillStyle": "hachure",
+      "strokeWidth": 1,
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "text": "in bucket",
+      "fontSize": 16,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle"
+    },
+    {
+      "id": "906a73ff-4d2a-46cb-bd00-9d2f4f82fb62",
+      "type": "arrow",
+      "x": 575,
+      "y": 350,
+      "width": 75,
+      "height": 50,
+      "strokeColor": "#000000",
+      "backgroundColor": "transparent",
+      "fillStyle": "hachure",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -75,
+          50
+        ]
+      ],
+      "endArrowhead": "arrow"
+    },
+    {
+      "id": "df93cd7e-8c56-4c0c-b160-47384ccea65e",
+      "type": "text",
+      "x": 507.5,
+      "y": 365,
+      "width": 60,
+      "height": 20,
+      "strokeColor": "#000000",
+      "backgroundColor": "transparent",
+      "fillStyle": "hachure",
+      "strokeWidth": 1,
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "text": "in bucket",
+      "fontSize": 16,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle"
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#ffffff",
+    "gridSize": 20
+  },
+  "files": {}
+}

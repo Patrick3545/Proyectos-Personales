@@ -21,6 +21,13 @@ La idea fue coger una máquina local (VMware) y simular un entorno híbrido en e
 
 > Todo el paso a paso del proyecto está en el README del repositorio.
 
+✅ **Proyecto 3 — Pipeline de Telemetría UDP en Tiempo Real (F1)**  
+Un proyecto On-Premise de ingesta masiva de datos estructurados:
+- Ingesta de alta frecuencia (60Hz UDP) con un **Parser Python** ultra-optimizado.
+- Uso de **Redpanda (Kafka)** como búfer de mensajería para desacoplamiento y absorción de picos.
+- Procesamiento asíncrono y *Batching* hacia **InfluxDB** (Base de datos Time-Series).
+- Visualización analítica en vivo e histórica usando **Grafana** y lenguaje **Flux**.
+
 ---
 
 ## 🚀 Roadmap de Aprendizaje

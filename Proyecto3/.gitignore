@@ -1,0 +1,29 @@
+# Local data and historical records (database directories)
+data/
+
+# Python caching and environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+venv/
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs and system files
+*.log
+.DS_Store
+
+# AI Agents
+.agents/
+skills-lock.json
+
+# Documentos varios y scripts sueltos
+*.pdf
+*.txt
+
+fix_*.py

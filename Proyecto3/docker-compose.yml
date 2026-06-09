@@ -1,0 +1,90 @@
+networks:
+  f1-mesh:
+    driver: bridge
+
+services:
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v23.3.5
+    container_name: f1-redpanda
+    command: redpanda start --smp 1 --overprovisioned --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092 --advertise-kafka-addr internal://redpanda:9092,external://127.0.0.1:19092 --mode dev-container --check=false
+    ports:
+      - "19092:19092"
+    environment:
+      - REDPANDA_ENVIRONMENT=development
+    volumes:
+      - ./data/redpanda:/var/lib/redpanda/data
+    networks:
+      - f1-mesh
+    restart: unless-stopped
+
+  redpanda-console:
+    image: docker.redpanda.com/redpandadata/console:v2.4.5
+    container_name: f1-redpanda-console
+    entrypoint: /bin/sh
+    command: -c "echo 'kafka:' > /tmp/config.yaml && echo '  brokers:' >> /tmp/config.yaml && echo '    - redpanda:9092' >> /tmp/config.yaml && /app/console --config.filepath=/tmp/config.yaml"
+    ports:
+      - "8080:8080"
+    networks:
+      - f1-mesh
+    depends_on:
+      - redpanda
+    restart: unless-stopped
+
+  influxdb:
+    image: influxdb:2.7-alpine
+    container_name: f1-influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=ingeniero_pitwall
+      - DOCKER_INFLUXDB_INIT_PASSWORD=F1Telemetry2026!
+      - DOCKER_INFLUXDB_INIT_ORG=red-bull-racing
+      - DOCKER_INFLUXDB_INIT_BUCKET=f1_telemetry_raw
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=token1234567890
+    volumes:
+      - ./data/influxdb:/var/lib/influxdb2
+    networks:
+      - f1-mesh
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: f1-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=1s 
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - f1-mesh
+    depends_on:
+      - influxdb
+    restart: unless-stopped
+
+  parser:
+    build: ./parser
+    container_name: f1-parser
+    ports:
+      - "20777:20777/udp"
+    networks:
+      - f1-mesh
+    depends_on:
+      - redpanda
+      - influxdb
+    volumes:
+      - ./parser/src:/app/src
+    restart: unless-stopped
+
+  consumer:
+    build: ./consumer
+    container_name: f1-consumer
+    networks:
+      - f1-mesh
+    depends_on:
+      - redpanda
+      - influxdb
+    volumes:
+      - ./consumer/src:/app/src
+    restart: unless-stopped

@@ -1,0 +1,1005 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": 1,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 10,
+      "title": "SECTOR 1: VISTA GLOBAL DE LA PARRILLA",
+      "type": "row"
+    },
+    {
+      "gridPos": {
+        "h": 7,
+        "w": 20,
+        "x": 0,
+        "y": 1
+      },
+      "id": 11,
+      "title": "COMPARADOR DE VELOCIDAD EN TIEMPO REAL (KM/H)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => not (r[\"driver_name\"] =~ /^Piloto/))\n  |> filter(fn: (r) => r[\"_field\"] == \"speed\")\n  |> group(columns: [\"driver_name\"])\n  |> aggregateWindow(every: 500ms, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2
+          },
+          "unit": "velocity-kmh"
+        }
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        },
+        "legend": {
+          "calcs": [
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right"
+        }
+      }
+    },
+    {
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 12,
+      "title": "ESTADO DE BANDERA FIA",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"fia_flags\")\n  |> group(columns: [\"_field\"])\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "textMode": "value",
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "SIN BANDERA",
+                  "color": "grey"
+                },
+                "1": {
+                  "text": "BANDERA VERDE",
+                  "color": "green"
+                },
+                "2": {
+                  "text": "BANDERA AZUL",
+                  "color": "blue"
+                },
+                "3": {
+                  "text": "BANDERA AMARILLA",
+                  "color": "yellow"
+                },
+                "4": {
+                  "text": "BANDERA ROJA",
+                  "color": "red"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 20,
+      "title": "SECTOR 2: TELEMETR\u00cdA DE CONDUCCI\u00d3N DIN\u00c1MICA ($driver)",
+      "type": "row"
+    },
+    {
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 9
+      },
+      "id": 21,
+      "title": "MARCHA",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"gear\")\n  |> group(columns: [\"_field\"])\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "textMode": "value",
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "N",
+                  "color": "green"
+                },
+                "-1": {
+                  "text": "R",
+                  "color": "orange"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 4,
+        "y": 9
+      },
+      "id": 22,
+      "title": "TAC\u00d3METRO (RPM)",
+      "type": "gauge",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"engine_rpm\")\n  |> group(columns: [\"_field\"])\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 15000,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 11500
+              },
+              {
+                "color": "red",
+                "value": 13200
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 12,
+        "y": 9
+      },
+      "id": 23,
+      "title": "TELEMETR\u00cdA DE PEDALES (%)",
+      "type": "bargauge",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"throttle\" or r[\"_field\"] == \"brake\")\n  |> keep(columns: [\"_time\", \"_value\", \"_field\"])\n  |> group(columns: [\"_field\"])\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "displayMode": "lcd",
+        "orientation": "vertical",
+        "textMode": "name"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 1,
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "throttle"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "green",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "brake"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "red",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 18,
+        "y": 9
+      },
+      "id": 24,
+      "title": "VELOC\u00cdMETRO RADIAL",
+      "type": "gauge",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"speed\")\n  |> group(columns: [\"_field\"])\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 360,
+          "unit": "velocity-kmh",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 240
+              },
+              {
+                "color": "red",
+                "value": 310
+              }
+            ]
+          }
+        }
+      },
+      "options": {
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 30,
+      "title": "SECTOR 3: GESTI\u00d3N ESTRAT\u00c9GICA, COMBUSTIBLE Y ERS ($driver)",
+      "type": "row"
+    },
+    {
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 15
+      },
+      "id": 31,
+      "title": "NIVEL DE COMBUSTIBLE EN TANQUE (L)",
+      "type": "gauge",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"fuel_in_tank\")\n  |> group(columns: [\"_field\"])\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 110,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 5
+              },
+              {
+                "color": "green",
+                "value": 15
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 6,
+        "y": 15
+      },
+      "id": 32,
+      "title": "BATER\u00cdA ERS REVOLUCIONADA (%)",
+      "type": "gauge",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"ers_store_energy_pct\")\n  |> group(columns: [\"_field\"])\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 100,
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 15
+              },
+              {
+                "color": "yellow",
+                "value": 45
+              },
+              {
+                "color": "green",
+                "value": 75
+              }
+            ]
+          }
+        }
+      },
+      "options": {
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      }
+    },
+    {
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 12,
+        "y": 15
+      },
+      "id": 33,
+      "title": "TEMPERATURA MOTOR (\u00b0C)",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"engine_temperature\")\n  |> group(columns: [\"_field\"])\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "textMode": "value",
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 90
+              },
+              {
+                "color": "orange",
+                "value": 110
+              },
+              {
+                "color": "red",
+                "value": 125
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 18,
+        "y": 15
+      },
+      "id": 34,
+      "title": "ESTRATEGIA DE NEUM\u00c1TICOS",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"tyre_compound\" or r[\"_field\"] == \"tyre_age\")\n  |> keep(columns: [\"_time\", \"_value\", \"_field\"])\n  |> group(columns: [\"_field\"])\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "textMode": "valueAndName",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "tyre_compound"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Compuesto"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "tyre_age"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Edad de Goma"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: vueltas"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 40,
+      "title": "SECTOR 4: AN\u00c1LISIS T\u00c9RMICO DIN\u00c1MICO ($driver)",
+      "type": "row"
+    },
+    {
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 21
+      },
+      "id": 41,
+      "title": "TEMPERATURA SUPERFICIE DE LAS GOMAS (\u00b0C)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /tyre_temp_surf_/)\n  |> group(columns: [\"_field\"])\n  |> aggregateWindow(every: 1s, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth"
+          },
+          "unit": "celsius"
+        }
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 21
+      },
+      "id": 42,
+      "title": "TEMPERATURA DE DISCOS DE FRENO (\u00b0C)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /brake_temp_/)\n  |> group(columns: [\"_field\"])\n  |> aggregateWindow(every: 1s, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth"
+          },
+          "unit": "celsius"
+        }
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 50,
+      "title": "SECTOR 5: CONTROL DE CRONOMETRAJE Y VUELTAS ($driver)",
+      "type": "row"
+    },
+    {
+      "gridPos": {
+        "h": 5,
+        "w": 3,
+        "x": 0,
+        "y": 28
+      },
+      "id": 51,
+      "title": "POSICI\u00d3N / VUELTA",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"car_position\" or r[\"_field\"] == \"current_lap_num\")\n  |> keep(columns: [\"_time\", \"_value\", \"_field\"])\n  |> group(columns: [\"_field\"])\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "textMode": "valueAndName",
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center"
+      }
+    },
+    {
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 3,
+        "y": 28
+      },
+      "id": 52,
+      "title": "TIEMPO VUELTA ACTUAL",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"current_lap_time\")\n  |> group(columns: [\"_field\"])\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "time:m:ss.SSS"
+        }
+      }
+    },
+    {
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 7,
+        "y": 28
+      },
+      "id": 53,
+      "title": "\u00daLTIMA VUELTA REALIZADA",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"last_lap_time\")\n  |> group(columns: [\"_field\"])\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "time:m:ss.SSS"
+        }
+      }
+    },
+    {
+      "gridPos": {
+        "h": 5,
+        "w": 7,
+        "x": 11,
+        "y": 28
+      },
+      "id": 54,
+      "title": "TIEMPOS POR SECTOR (S1 / S2 / S3)",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"sector1_time\" or r[\"_field\"] == \"sector2_time\" or r[\"_field\"] == \"sector3_time\")\n  |> keep(columns: [\"_time\", \"_value\", \"_field\"])\n  |> group(columns: [\"_field\"])\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "textMode": "valueAndName",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        }
+      }
+    },
+    {
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 18,
+        "y": 28
+      },
+      "id": 55,
+      "title": "DIFERENCIAS Y GAPS (DELTAS)",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"driver_name\"] == \"${driver}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"delta_front\" or r[\"_field\"] == \"delta_leader\")\n  |> keep(columns: [\"_time\", \"_value\", \"_field\"])\n  |> group(columns: [\"_field\"])\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "textMode": "valueAndName",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "delta_front"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Intervalo (Coche Delante)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "delta_leader"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Brecha al L\u00edder"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 42
+      },
+      "id": 80,
+      "title": "SECTOR 7: CLASIFICACI\u00d3N DE LA PARRILLA EN TIEMPO REAL (F1 TV STYLE)",
+      "type": "row"
+    },
+    {
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 43
+      },
+      "id": 81,
+      "title": "TABLA DE CLASIFICACI\u00d3N (LIVE GRID GAPS & STRATEGY)",
+      "type": "table",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "InfluxDB_F1"
+          },
+          "query": "from(bucket: \"f1_telemetry_raw\")\n  |> range(start: -2m)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry_fast\")\n  |> filter(fn: (r) => r[\"_field\"] == \"car_position\" or r[\"_field\"] == \"tyre_compound\" or r[\"_field\"] == \"delta_leader\")\n  |> filter(fn: (r) => not (r[\"driver_name\"] =~ /^Piloto/))\n  |> keep(columns: [\"_value\", \"_field\", \"car_idx\", \"driver_name\"])\n  |> group(columns: [\"car_idx\", \"driver_name\", \"_field\"])\n  |> last()\n  |> pivot(rowKey:[\"car_idx\", \"driver_name\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> group(columns: [\"car_idx\"])\n  |> last(column: \"car_position\")\n  |> group()\n  |> map(fn: (r) => ({ \"Pos\": int(v: r.car_position), \"Piloto\": r.driver_name, \"Neum\u00e1tico\": r.tyre_compound, \"Brecha al L\u00edder\": r.delta_leader }))\n  |> keep(columns: [\"Pos\", \"Piloto\", \"Neum\u00e1tico\", \"Brecha al L\u00edder\"])\n  |> sort(columns: [\"Pos\"])",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showHeader": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "displayMode": "auto"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Pos"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Piloto"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 250
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Neum\u00e1tico"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Brecha al L\u00edder"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 200
+              },
+              {
+                "id": "unit",
+                "value": "s"
+              },
+              {
+                "id": "decimals",
+                "value": 3
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "L\u00cdDER",
+                        "color": "green"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "refresh": "1s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [
+    "f1",
+    "devops"
+  ],
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "1s",
+      "5s",
+      "10s"
+    ]
+  },
+  "timezone": "browser",
+  "title": "Muro de Ingenier\u00eda de Pista (F1 25)",
+  "templating": {
+    "list": [
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "InfluxDB_F1"
+        },
+        "definition": "import \"influxdata/influxdb/schema\"\nschema.tagValues(bucket: \"f1_telemetry_raw\", tag: \"driver_name\")\n  |> filter(fn: (r) => not (r._value =~ /^Piloto/))",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Piloto Objetivo",
+        "multi": false,
+        "name": "driver",
+        "options": [],
+        "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(bucket: \"f1_telemetry_raw\", tag: \"driver_name\")\n  |> filter(fn: (r) => not (r._value =~ /^Piloto/))",
+        "refresh": 1,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "version": 1
+}
