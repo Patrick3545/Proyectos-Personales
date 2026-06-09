@@ -2,10 +2,10 @@
 
 👨‍💻 **SysAdmin & MultiCloud Engineer / DevOps**
 
-A punto de finalizar mi Máster en Ingeniería MultiCloud, Seguridad y DevOps en Madrid, España 🇪🇸[cite: 1].
-Me apasiona todo el ecosistema cloud, la automatización y la cultura DevOps[cite: 1]. He creado este repositorio con un fin muy claro: **aprender haciendo**.
+A punto de finalizar mi Máster en Ingeniería MultiCloud, Seguridad y DevOps en Madrid, España 🇪🇸.
+Me apasiona todo el ecosistema cloud, la automatización y la cultura DevOps. He creado este repositorio con un fin muy claro: **aprender haciendo**.
 
-Aquí iré publicando las diferentes pruebas, laboratorios y "trasteos" que vaya realizando para descubrir cómo funcionan realmente los servicios que nubes como Azure, AWS y GCP nos ofrecen[cite: 1]. Mi objetivo es crear infraestructuras desde cero, romperlas y volverlas a levantar para entender la tecnología desde dentro.
+Aquí iré publicando las diferentes pruebas, laboratorios y "trasteos" que vaya realizando para descubrir cómo funcionan realmente los servicios que nubes como Azure, AWS y GCP nos ofrecen. Mi objetivo es crear infraestructuras desde cero, romperlas y volverlas a levantar para entender la tecnología desde dentro.
 
 ## 🔭 ¿En qué he estado trabajando?
 
@@ -32,7 +32,7 @@ Un proyecto On-Premise de ingesta masiva de datos estructurados para visualizar 
 
 ## 🚀 Stack Tecnológico y Herramientas
 
-He consolidado una base sólida en administración de sistemas y soporte de redes, orientando mi perfil hacia la automatización y la Infraestructura como Código (IaC)[cite: 1]. Mis herramientas y tecnologías clave incluyen:
+He consolidado una base sólida en administración de sistemas y soporte de redes, orientando mi perfil hacia la automatización y la Infraestructura como Código (IaC). Mis herramientas y tecnologías clave incluyen:
 
 - **Cloud:** Microsoft Azure, AWS y Google Cloud Platform (GCP).
 - **Automatización (IaC y CI/CD):** Terraform, Ansible y CloudFormation.
@@ -42,7 +42,7 @@ He consolidado una base sólida en administración de sistemas y soporte de rede
 
 ## 🏆 Certificaciones Oficiales
 
-Durante mi camino de aprendizaje, he ido validando mis conocimientos técnicos con las siguientes certificaciones oficiales[cite: 1]:
+Durante mi camino de aprendizaje, he ido validando mis conocimientos técnicos con las siguientes certificaciones oficiales:
 
 ☁️ **Microsoft Azure:**
 - ✅ AZ-305: Solutions Architect Expert
