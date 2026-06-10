@@ -1,5 +1,7 @@
 # Cómo Realizar un Análisis Histórico Post-Carrera
 
+![Dashboard de Análisis Histórico](../assets/Telemetria_2.png)
+
 Este proyecto separa la telemetría en tiempo real de los datos históricos. Para analizar los tiempos por vuelta, estrategias de neumáticos y diferencias después de una carrera, debes utilizar el dashboard dedicado de **Análisis Histórico**.
 
 ## 1. Acceder al Dashboard

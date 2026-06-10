@@ -14,6 +14,8 @@
 
 Bienvenido al repositorio oficial del **F1 Telemetry Pipeline**. Este proyecto captura los paquetes de red crudos del videojuego F1 25 y los transforma en un espectacular "Muro de Ingeniero" en vivo a través de un backend asíncrono y robusto.
 
+![Muro de Ingeniero en Vivo](docs/assets/Telemetria_1.png)
+
 ## 📖 Documentación
 
 Hemos estructurado toda la documentación técnica siguiendo el [Framework Diátaxis](https://diataxis.fr/), dividiendo el contenido según el propósito de tu visita:
